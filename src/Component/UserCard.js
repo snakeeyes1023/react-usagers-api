@@ -9,25 +9,24 @@ class UserCard extends React.Component {
         this.state = {
             // isLodad est faux tant que l'appel n'est pas terminé
             isLoaded: false,
-            utilisateurs : [],
+            utilisateurs : null,
         }
-        this.callUserApi = this.callUserApi.bind(this);
-
     }
     componentDidMount() {
-        this.callUserApi();
-    }
+        axios.get('https://randomuser.me/api/')
+        .then((response) => {
+            const utilisateur = response.data;
 
-    callUserApi() {
-        axios.get('https://jsonplaceholder.typicode.com/users')
-            .then(function(response) {
-                const utilisateurs = response.data;
-                this.setState({
-                    utilisateurs : utilisateurs,
-                    isLoaded: true
-                })
+            console.log(utilisateur.results[0]);
+            this.setState({
+                utilisateurs : utilisateur.results[0],
+                isLoaded: true
             })
-    }
+
+
+        })   
+     }
+
 
 
 
@@ -36,14 +35,14 @@ class UserCard extends React.Component {
             return (
                 <div>
                     En Cours
-                    <button onClick={this.callUserApi}>Rechercher</button>
                 </div>
             )
         }
 
         return (
             <div>
-                {this.state.user}
+                <img src={this.state.utilisateurs.picture.medium} alt="" />
+                {this.state.utilisateurs.name.first} {this.state.utilisateurs.name.last}            
             </div>
         )
 
